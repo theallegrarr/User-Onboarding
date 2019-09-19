@@ -41,8 +41,8 @@ const initialUserForm = {
 
 const validationSchema = yup.object().shape({
   name: yup.string('Has to be string').required('No Name'),
-  email: yup.string().email(),
-  password: yup.string(),
+  email: yup.string().email('has to be an email').required('enter an email'),
+  password: yup.string().required('password required'),
 });
 
 function UserForm({ onSubmit }) {
