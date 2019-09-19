@@ -4,13 +4,27 @@ import axios from 'axios';
 import * as yup from 'yup';
 import uuid  from 'uuid';
 
+const postApi = `https://reqres.in/api/users`;
+
 export default function FormContainer(){
   const [users, setUser] = useState([]);
+  const [serverError, setServerError] = useState();
 
   const addUser = (formValues) => {
     const { name, email, password } = formValues;
-    if (name && email && password)
-    setUser(users.concat({ id: uuid(), name: name, email: email, password: password }));
+    const newUser = {
+      id: uuid(), 
+      name: name, 
+      email: email, 
+      password: password 
+    };
+    
+    if (name && email && password){
+      axios.post(postApi, newUser).then(res => {
+        setUser(users.concat(newUser));
+        console.log(res.data);
+      }).catch(e => setServerError(e))
+    }
   }
 
   const checkUsers = () => {
@@ -23,6 +37,7 @@ export default function FormContainer(){
 
   return (
     <div>
+      {serverError}
       <UserForm onSubmit={addUser}/>
 
       {
