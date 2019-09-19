@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
 import * as yup from 'yup';
+import uuid  from 'uuid';
 
 export default function FormContainer(){
   const [users, setUser] = useState([]);
 
   const addUser = (formValues) => {
     const { name, email, password } = formValues;
-    debugger
-    setUser(users.concat({ name: name, email: email, password: password }));
+    if (name && email && password)
+    setUser(users.concat({ id: uuid(), name: name, email: email, password: password }));
   }
 
   const checkUsers = () => {
@@ -79,4 +80,3 @@ function UserForm({ onSubmit }) {
     />
   );
 }
-
