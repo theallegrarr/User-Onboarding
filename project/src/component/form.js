@@ -11,19 +11,21 @@ export default function FormContainer(){
   const [serverError, setServerError] = useState();
 
   const addUser = (formValues) => {
-    const { name, email, password } = formValues;
+    const { name, email, password, checkbox } = formValues;
     const newUser = {
       id: uuid(), 
       name: name, 
       email: email, 
       password: password 
     };
-    
-    if (name && email && password){
+
+    if (name && email && password && checkbox){
       axios.post(postApi, newUser).then(res => {
         setUser(users.concat(newUser));
         console.log(res.data);
       }).catch(e => setServerError(e))
+    } else {
+      setServerError('Required Field Input Missing');
     }
   }
 
@@ -33,7 +35,7 @@ export default function FormContainer(){
 
   useEffect(() => {
    checkUsers();
-  }, []);
+  }, [serverError, users]);
 
   return (
     <div>
@@ -43,7 +45,7 @@ export default function FormContainer(){
       {
         users.length
           ? users.map(fr => (
-            <div key={fr.id}>{fr.name} is {fr.email}</div>
+            <div key={fr.id}>Name: {fr.name}, Email: {fr.email}</div>
           ))
           : 'User List Empty'
       }
@@ -59,6 +61,7 @@ const validationSchema = yup.object().shape({
   name: yup.string('Has to be string').required('No Name'),
   email: yup.string().email('has to be an email').required('enter an email'),
   password: yup.string().required('password required'),
+  checkbox: yup.bool('Terms of Service is required'),
 });
 
 function UserForm({ onSubmit }) {
@@ -86,6 +89,7 @@ function UserForm({ onSubmit }) {
             </div>
             <div>
               <Field name='checkbox' type='checkbox'></Field>
+              <label>I Agree to Terms of Service</label>
               <ErrorMessage name='checkbox' component='div' />
             </div>
             <button type='submit'>Submit</button>
