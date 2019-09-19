@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
 import * as yup from 'yup';
 import uuid  from 'uuid';
+import './form.css';
 
 const postApi = `https://reqres.in/api/users`;
 
@@ -23,9 +24,10 @@ export default function FormContainer(){
       axios.post(postApi, newUser).then(res => {
         setUser(users.concat(newUser));
         console.log(res.data);
+        setServerError('New User Added!');
       }).catch(e => setServerError(e))
     } else {
-      setServerError('Required Field Input Missing');
+      setServerError('You must agree to terms of service');
     }
   }
 
@@ -39,9 +41,14 @@ export default function FormContainer(){
 
   return (
     <div>
-      {serverError}
+      <div className={
+        serverError === 'You must agree to terms of service' ?
+        'error' : 'noError'
+      }>
+        {serverError}
+      </div>
       <UserForm onSubmit={addUser}/>
-
+      <div  className='users'>
       {
         users.length
           ? users.map(fr => (
@@ -49,6 +56,7 @@ export default function FormContainer(){
           ))
           : 'User List Empty'
       }
+      </div>
     </div>
   );
 }
@@ -74,23 +82,26 @@ function UserForm({ onSubmit }) {
       onSubmit={onSubmit}
       render={props => {
         return (
-          <Form>
+          <Form className='form' >
             <div>
+              <label>Name: </label>
               <Field name='name' type='text' placeholder='Name' />
-              <ErrorMessage name='name' component='div' />
+              <ErrorMessage name='name' component='div' className='error' />
             </div>
             <div>
+              <label>Email: </label>
               <Field name='email' type='text' placeholder='email...' />
-              <ErrorMessage name='email' component='div' />
+              <ErrorMessage name='email' component='div' className='error' />
             </div>
             <div>
+              <label>Password: </label>
               <Field name='password' type='text' placeholder='password...' />
-              <ErrorMessage name='password' component='div' />
+              <ErrorMessage name='password' component='div' className='error' />
             </div>
             <div>
               <Field name='checkbox' type='checkbox'></Field>
               <label>I Agree to Terms of Service</label>
-              <ErrorMessage name='checkbox' component='div' />
+              <ErrorMessage name='checkbox' component='div' className='error' />
             </div>
             <button type='submit'>Submit</button>
           </Form>
