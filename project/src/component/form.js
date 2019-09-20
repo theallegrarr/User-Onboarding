@@ -95,7 +95,7 @@ function UserForm({ onSubmit }) {
             </div>
             <div>
               <label>Password: </label>
-              <Field name='password' type='text' placeholder='password...' />
+              <Field name='password' type='password' placeholder='password...' />
               <ErrorMessage name='password' component='div' className='error' />
             </div>
             <div>
